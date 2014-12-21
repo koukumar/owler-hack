@@ -19,28 +19,29 @@ def main(host='localhost', port=8086):
     client.write_points(json_body)
 
 def load_airline_date():
-  with open('farequote.csv', 'rb') as csvfile:
+  with open('farequote.csv', 'r') as csvfile:
     farequotes = csv.reader(csvfile, delimiter=',')
     list1 = []
     i = 1
     for row in farequotes:
         if i==0: 
             row[0] = row[0].replace("Z","")
-            row[0] = calendar.timegm(time.strptime(row[0], "%Y-%m-%d %H:%M:%S"));
+            row[0] = time.strptime(row[0], "%Y-%m-%d %H:%M:%S")
+            row[2] = float(row[2])
         i=0;
         list1.append(row)
     return list1
 
 def get_airline_data():
-    airline_data = load_airline_date();
-    fields = airline_data[0];
+    airline_data = load_airline_date()
+    fields = airline_data[0]
     json_body = [{
-        "points": airline_data[1 : len(airline_data)],
+        "points": airline_data[1 : ],
         "name": "metrics",
         "columns": fields
     }]
     return json_body
 
 
-if __name__ == '__main__':
-  main()
+#if __name__ == '__main__':
+ # main("cbe", 49157)
